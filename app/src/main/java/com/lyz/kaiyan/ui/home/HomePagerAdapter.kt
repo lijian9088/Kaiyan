@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
  * @create 2021/01/15
  * @Describe
  */
-class HomePagerAdapter(fm: FragmentManager, list: MutableList<Fragment>) :
-    FragmentStatePagerAdapter(fm) {
+class HomePagerAdapter(fm: FragmentManager, behavior: Int,list: MutableList<Fragment>) :
+    FragmentStatePagerAdapter(fm, behavior) {
 
     var fragments: MutableList<Fragment> = list
 

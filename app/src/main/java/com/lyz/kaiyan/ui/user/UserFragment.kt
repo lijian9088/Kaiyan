@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.lyz.kaiyan.R
+import com.lyz.kaiyan.base.MyLazyFragment
 import kotlin.random.Random
 
-class UserFragment : Fragment() {
+class UserFragment : MyLazyFragment() {
 
     companion object {
         fun newInstance() = UserFragment()
@@ -41,6 +42,10 @@ class UserFragment : Fragment() {
             val nextInt = random.nextInt()
             viewModel.text.value = ("nextInt:$nextInt")
         })
+    }
+
+    override fun lazyInit() {
+        TODO("Not yet implemented")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

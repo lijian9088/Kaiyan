@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.lyz.kaiyan.R
+import com.lyz.kaiyan.base.MyFragment
+import com.lyz.kaiyan.base.MyLazyFragment
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment : MyFragment() {
 
     private lateinit var notificationsViewModel: NotificationsViewModel
 
@@ -21,7 +23,7 @@ class NotificationsFragment : Fragment() {
     ): View? {
         notificationsViewModel =
                 ViewModelProvider(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_found, container, false)
+        val root = inflater.inflate(R.layout.fragment_discovery, container, false)
         val textView: TextView = root.findViewById(R.id.text_notifications)
         notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it

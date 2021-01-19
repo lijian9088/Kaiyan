@@ -12,9 +12,9 @@
         android:title="@string/title_community" />
 
     <item
-        android:id="@+id/navigation_found"
+        android:id="@+id/navigation_discovery"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_found" />
+        android:title="@string/title_discovery" />
 
     <item
         android:id="@+id/navigation_user"
