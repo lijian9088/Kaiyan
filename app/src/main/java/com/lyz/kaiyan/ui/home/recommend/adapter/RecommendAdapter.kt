@@ -1,20 +1,32 @@
 package com.lyz.kaiyan.ui.home.recommend.adapter
 
-import android.widget.TextView
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.lyz.kaiyan.R
+import com.chad.library.adapter.base.BaseProviderMultiAdapter
+import com.chad.library.adapter.base.provider.BaseItemProvider
+import com.lyz.kaiyan.ui.home.recommend.adapter.entity.BaseEntity
+import com.lyz.kaiyan.ui.home.recommend.adapter.entity.TitleEntity
+import com.lyz.kaiyan.ui.home.recommend.adapter.provider.TITLE_VIEW
+import com.lyz.kaiyan.ui.home.recommend.adapter.provider.TitleProvider
 
 /**
  * @author liyanze
  * @create 2021/01/19
  * @Describe
  */
-class RecommendAdapter(data: MutableList<String>?) :
-    BaseQuickAdapter<String, BaseViewHolder>(R.layout.item_recommend, data) {
+class RecommendAdapter : BaseProviderMultiAdapter<BaseEntity> {
 
-    override fun convert(holder: BaseViewHolder, item: String) {
-        val layoutPosition = holder.layoutPosition
-        holder.getView<TextView>(R.id.tvTitle).text = "posistion:$layoutPosition, item:$item"
+    constructor() {
+        addItemProvider(TitleProvider() as BaseItemProvider<BaseEntity>)
+//        test(TitleProvider())
+    }
+
+//    fun test(provider : BaseItemProvider<out BaseEntity>){
+//
+//    }
+
+    override fun getItemType(data: List<BaseEntity>, position: Int): Int {
+        if(data[position] is TitleEntity) {
+            return TITLE_VIEW
+        }
+        return TITLE_VIEW
     }
 }
