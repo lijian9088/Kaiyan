@@ -2,31 +2,30 @@ package com.lyz.kaiyan.ui.home.recommend.adapter
 
 import com.chad.library.adapter.base.BaseProviderMultiAdapter
 import com.chad.library.adapter.base.provider.BaseItemProvider
-import com.lyz.kaiyan.ui.home.recommend.adapter.entity.BaseEntity
-import com.lyz.kaiyan.ui.home.recommend.adapter.entity.TitleEntity
-import com.lyz.kaiyan.ui.home.recommend.adapter.provider.TITLE_VIEW
-import com.lyz.kaiyan.ui.home.recommend.adapter.provider.TitleProvider
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.BaseViewModel
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.SingleTitleViewViewModel
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.TitleViewViewModel
+import com.lyz.kaiyan.ui.home.recommend.adapter.provider.*
 
 /**
  * @author liyanze
  * @create 2021/01/19
  * @Describe
  */
-class RecommendAdapter : BaseProviderMultiAdapter<BaseEntity> {
+class RecommendAdapter : BaseProviderMultiAdapter<BaseViewModel> {
 
     constructor() {
-        addItemProvider(TitleProvider() as BaseItemProvider<BaseEntity>)
-//        test(TitleProvider())
+        addItemProvider(TitleProvider() as BaseItemProvider<BaseViewModel>)
+        addItemProvider(SingleTitleProvider() as BaseItemProvider<BaseViewModel>)
     }
 
-//    fun test(provider : BaseItemProvider<out BaseEntity>){
-//
-//    }
-
-    override fun getItemType(data: List<BaseEntity>, position: Int): Int {
-        if(data[position] is TitleEntity) {
-            return TITLE_VIEW
+    override fun getItemType(data: List<BaseViewModel>, position: Int): Int {
+        if(data[position] is TitleViewViewModel) {
+            return RecommendItemType.TITLE_VIEW
         }
-        return TITLE_VIEW
+        if(data[position] is SingleTitleViewViewModel) {
+            return RecommendItemType.SINGLE_TITLE_VIEW
+        }
+        return RecommendItemType.TITLE_VIEW
     }
 }

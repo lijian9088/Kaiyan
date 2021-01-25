@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
-import com.google.gson.Gson
 import com.hjq.http.EasyHttp
 import com.hjq.http.listener.OnHttpListener
 import com.lyz.kaiyan.R
@@ -17,8 +16,8 @@ import com.lyz.kaiyan.base.MyLazyFragment
 import com.lyz.kaiyan.bean.*
 import com.lyz.kaiyan.http.request.RecommendApi
 import com.lyz.kaiyan.ui.home.recommend.adapter.RecommendAdapter
-import com.lyz.kaiyan.ui.home.recommend.adapter.entity.BaseEntity
-import com.lyz.kaiyan.ui.home.recommend.adapter.entity.TitleEntity
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.BaseViewModel
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.SingleTitleViewViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
 
@@ -89,7 +88,7 @@ class RecommendFragment : MyLazyFragment() {
     private fun parseResult(result: MultiPageBean?) {
         nextPageUrl = result?.nextPageUrl
 
-        val dataList = mutableListOf<BaseEntity>()
+        val dataList = mutableListOf<BaseViewModel>()
 
         val itemList = result?.itemList
         if(itemList == null) {
@@ -98,15 +97,16 @@ class RecommendFragment : MyLazyFragment() {
         for(i in itemList.indices) {
             val item = itemList[i]
             val type = item.type
+            val toJson = GsonUtils.toJson(item)
+            println("toJson:${toJson}")
             if("squareCardCollection" == type) {
-//                val bean = GsonUtils.fromJson<SquareCardCollectionBean>(item.data.toString(),
-//                    SquareCardCollectionBean::class.java)
-//                parseSquareCard(dataList, bean)
+                val bean = GsonUtils.fromJson<SquareCardCollectionBean>(GsonUtils.toJson(item),
+                    SquareCardCollectionBean::class.java)
+                parseSquareCard(dataList, bean)
             }
             if("textCard" == type) {
-                val toJson = GsonUtils.toJson(item)
-                println("toJson:${toJson}")
-                val bean = GsonUtils.fromJson<TextCardBean>(toJson, TextCardBean::class.java)
+                val bean = GsonUtils.fromJson<TextCardBean>(GsonUtils.toJson(item),
+                    TextCardBean::class.java)
                 println("bean:$bean")
                 parseTextCard(dataList, bean)
             }
@@ -122,25 +122,25 @@ class RecommendFragment : MyLazyFragment() {
 
     }
 
-    private fun parseSquareCard(list: MutableList<BaseEntity>, squareCardCollectionBean: SquareCardCollectionBean) {
+    private fun parseSquareCard(list: MutableList<BaseViewModel>, squareCardCollectionBean: SquareCardCollectionBean) {
 
     }
 
-    private fun parseTextCard(list: MutableList<BaseEntity>, textCardBean: TextCardBean) {
-        val titleEntity = TitleEntity()
-        titleEntity.title = textCardBean.data.text
-        list.add(titleEntity)
+    private fun parseTextCard(list: MutableList<BaseViewModel>, textCardBean: TextCardBean) {
+        val singleTitleEntity = SingleTitleViewViewModel()
+        singleTitleEntity.title = textCardBean.data.text
+        list.add(singleTitleEntity)
     }
 
-    private fun parseFollowCard(list: MutableList<BaseEntity>, followCardBean: FollowCardBean) {
-
-    }
-
-    private fun parseVideoSmallCard(list: MutableList<BaseEntity>, videoSmallCardBean: VideoSmallCardBean) {
+    private fun parseFollowCard(list: MutableList<BaseViewModel>, followCardBean: FollowCardBean) {
 
     }
 
-    private fun showData(result: MutableList<BaseEntity>) {
+    private fun parseVideoSmallCard(list: MutableList<BaseViewModel>, videoSmallCardBean: VideoSmallCardBean) {
+
+    }
+
+    private fun showData(result: MutableList<BaseViewModel>) {
         val recommendAdapter = recyclerView.adapter as RecommendAdapter
         recommendAdapter.setList(result)
     }
