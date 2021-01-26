@@ -45,7 +45,7 @@ class UserFragment : MyLazyFragment() {
     }
 
     override fun lazyInit() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

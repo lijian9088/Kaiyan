@@ -5,7 +5,7 @@ package com.lyz.kaiyan.ui.home.recommend.adapter.model
  * @create 2021/01/22
  * @Describe
  */
-open class TitleViewViewModel : BaseViewModel() {
+open class TitleModel : BaseModel() {
     var title: String? = null
     var actionTitle: String? = null
 }

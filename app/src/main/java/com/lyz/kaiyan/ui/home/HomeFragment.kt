@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.lyz.kaiyan.R
 import com.lyz.kaiyan.base.MyLazyFragment
@@ -82,7 +83,8 @@ class HomeFragment : MyLazyFragment(), View.OnClickListener {
                 updateNav(position)
             }
         })
-        viewPager.currentItem = 1
+//        viewPager.currentItem = 1
+        updateNav(0)
     }
 
     private fun updateNav(position: Int) {

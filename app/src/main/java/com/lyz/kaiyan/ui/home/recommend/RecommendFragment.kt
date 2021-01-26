@@ -9,16 +9,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.hjq.http.EasyHttp
+import com.hjq.http.config.IRequestApi
 import com.hjq.http.listener.OnHttpListener
 import com.lyz.kaiyan.R
 import com.lyz.kaiyan.base.MyLazyFragment
 import com.lyz.kaiyan.bean.*
+import com.lyz.kaiyan.http.request.CustomApi
 import com.lyz.kaiyan.http.request.RecommendApi
 import com.lyz.kaiyan.ui.home.recommend.adapter.RecommendAdapter
-import com.lyz.kaiyan.ui.home.recommend.adapter.model.BaseViewModel
-import com.lyz.kaiyan.ui.home.recommend.adapter.model.SingleTitleViewViewModel
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.*
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.api.RefreshLayout
+import com.scwang.smart.refresh.layout.listener.OnMultiListener
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener
+import com.scwang.smart.refresh.layout.simple.SimpleMultiListener
 
 
 class RecommendFragment : MyLazyFragment() {
@@ -51,7 +59,7 @@ class RecommendFragment : MyLazyFragment() {
         view?.let { initView(it) }
         initData()
         initEvent()
-        initHttp()
+        refreshLayout.autoRefresh()
     }
 
     private fun initView(root: View) {
@@ -65,7 +73,34 @@ class RecommendFragment : MyLazyFragment() {
     }
 
     private fun initEvent() {
+        refreshLayout.setOnMultiListener(object : SimpleMultiListener(){
+            override fun onRefresh(refreshLayout: RefreshLayout) {
+                initHttp()
+            }
 
+            override fun onLoadMore(refreshLayout: RefreshLayout) {
+                LogUtils.d("onLoadMore:$nextPageUrl")
+                loadMore()
+            }
+        })
+
+    }
+
+    private fun loadMore() {
+        EasyHttp.get(this)
+            .api(CustomApi(nextPageUrl))
+            .request(object : OnHttpListener<MultiPageBean> {
+                override fun onSucceed(result: MultiPageBean?) {
+                    parseResult(result)
+                    refreshLayout.finishLoadMore()
+                }
+
+                override fun onFail(e: Exception?) {
+                    showFail(e)
+                    refreshLayout.finishLoadMore(false)
+                }
+
+            })
     }
 
     private fun initHttp() {
@@ -74,10 +109,12 @@ class RecommendFragment : MyLazyFragment() {
             .request(object : OnHttpListener<MultiPageBean> {
                 override fun onSucceed(result: MultiPageBean?) {
                     parseResult(result)
+                    refreshLayout.finishRefresh()
                 }
 
                 override fun onFail(e: Exception?) {
                     showFail(e)
+                    refreshLayout.finishRefresh(false)
                 }
 
             })
@@ -86,9 +123,11 @@ class RecommendFragment : MyLazyFragment() {
     private var nextPageUrl: String? = null
 
     private fun parseResult(result: MultiPageBean?) {
-        nextPageUrl = result?.nextPageUrl
 
-        val dataList = mutableListOf<BaseViewModel>()
+        nextPageUrl = result?.nextPageUrl
+        LogUtils.d("parseResult:$nextPageUrl")
+
+        val dataList = mutableListOf<BaseModel>()
 
         val itemList = result?.itemList
         if(itemList == null) {
@@ -97,24 +136,23 @@ class RecommendFragment : MyLazyFragment() {
         for(i in itemList.indices) {
             val item = itemList[i]
             val type = item.type
-            val toJson = GsonUtils.toJson(item)
-            println("toJson:${toJson}")
+            val json = GsonUtils.toJson(item)
+            println("json:${json}")
             if("squareCardCollection" == type) {
-                val bean = GsonUtils.fromJson<SquareCardCollectionBean>(GsonUtils.toJson(item),
-                    SquareCardCollectionBean::class.java)
+                val bean = GsonUtils.fromJson(json, SquareCardCollectionBean::class.java)
                 parseSquareCard(dataList, bean)
             }
             if("textCard" == type) {
-                val bean = GsonUtils.fromJson<TextCardBean>(GsonUtils.toJson(item),
-                    TextCardBean::class.java)
-                println("bean:$bean")
+                val bean = GsonUtils.fromJson(json, TextCardBean::class.java)
                 parseTextCard(dataList, bean)
             }
             if("followCard" == type) {
-//                parseFollowCard(dataList, item.data as FollowCardBean)
+                val bean = GsonUtils.fromJson(json, FollowCardBean::class.java)
+                parseFollowCard(dataList, bean)
             }
             if("videoSmallCard" == type) {
-//                parseVideoSmallCard(dataList, item.data as VideoSmallCardBean)
+                val bean = GsonUtils.fromJson(json, VideoSmallCardBean::class.java)
+                parseVideoSmallCard(dataList, bean)
             }
         }
 
@@ -122,31 +160,62 @@ class RecommendFragment : MyLazyFragment() {
 
     }
 
-    private fun parseSquareCard(list: MutableList<BaseViewModel>, squareCardCollectionBean: SquareCardCollectionBean) {
+    private fun parseSquareCard(list: MutableList<BaseModel>, squareCardCollectionBean: SquareCardCollectionBean) {
+        val data = squareCardCollectionBean.data
 
+        val titleViewViewModel = TitleModel()
+        titleViewViewModel.title = data.header.title
+        titleViewViewModel.actionTitle = data.header.rightText
+        list.add(titleViewViewModel)
+
+        for(i in data.itemList.indices) {
+            val value = data.itemList[i]
+            val followCardBean = GsonUtils.fromJson(GsonUtils.toJson(value), FollowCardBean::class.java)
+            parseFollowCard(list, followCardBean)
+        }
     }
 
-    private fun parseTextCard(list: MutableList<BaseViewModel>, textCardBean: TextCardBean) {
-        val singleTitleEntity = SingleTitleViewViewModel()
-        singleTitleEntity.title = textCardBean.data.text
-        list.add(singleTitleEntity)
+    private fun parseTextCard(list: MutableList<BaseModel>, textCardBean: TextCardBean) {
+        val singleTitleViewModel = SingleTitleModel()
+        singleTitleViewModel.title = textCardBean.data.text
+        list.add(singleTitleViewModel)
     }
 
-    private fun parseFollowCard(list: MutableList<BaseViewModel>, followCardBean: FollowCardBean) {
-
+    private fun parseFollowCard(list: MutableList<BaseModel>, followCardBean: FollowCardBean) {
+        val data = followCardBean.data.content.data
+        val followCardViewModel = FollowCardModel()
+        followCardViewModel.coverUrl = data.cover.detail
+        followCardViewModel.videoTime = data.duration
+        followCardViewModel.authorUrl = data.author.icon
+        followCardViewModel.title = data.title
+        followCardViewModel.description = "${data.author.name} / #${data.category}"
+        list.add(followCardViewModel)
     }
 
-    private fun parseVideoSmallCard(list: MutableList<BaseViewModel>, videoSmallCardBean: VideoSmallCardBean) {
-
+    private fun parseVideoSmallCard(list: MutableList<BaseModel>, videoSmallCardBean: VideoSmallCardBean) {
+        val data = videoSmallCardBean.data
+        val model = VideoSmallCardModel()
+        model.coverUrl = data.cover.detail
+        model.videoTime = data.duration
+        model.title = data.title
+        model.description = "${data.author.name} / #${data.category}"
+        list.add(model)
     }
 
-    private fun showData(result: MutableList<BaseViewModel>) {
+    private fun showData(result: MutableList<BaseModel>) {
         val recommendAdapter = recyclerView.adapter as RecommendAdapter
-        recommendAdapter.setList(result)
+//        recommendAdapter.setList(result)
+        if(recommendAdapter.data.size <= 0){
+            recommendAdapter.setList(result)
+        }else{
+            recommendAdapter.addData(result)
+        }
     }
 
     private fun showFail(e: Exception?) {
-
+        val msg = "fail:${e?.message}"
+        LogUtils.e("fail:$msg")
+        ToastUtils.showShort("fail:$msg")
     }
 
 }

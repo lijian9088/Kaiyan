@@ -1,4 +1,4 @@
-package com.lyz.kaiyan.ui.home.recommend.adapter.provider
+package com.lyz.kaiyan.ui.home.recommend.adapter
 
 /**
  * @author liyanze

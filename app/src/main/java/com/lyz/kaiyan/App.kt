@@ -64,8 +64,8 @@ class App : Application() {
 
         EasyConfig.with(okHttpClient)
             // 是否打印日志
-            .setLogEnabled(BuildConfig.DEBUG)
-//            .setLogEnabled(false)
+//            .setLogEnabled(BuildConfig.DEBUG)
+            .setLogEnabled(false)
             // 设置服务器配置
             .setServer(server)
             // 设置请求处理策略
