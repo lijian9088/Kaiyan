@@ -29,4 +29,10 @@
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
 
+    <fragment
+        android:id="@+id/navigation_video_detail"
+        android:name="com.lyz.kaiyan.ui.videodetail.VideoDetailFragment"
+        android:label="videoDetail"
+        tools:layout="@layout/fragment_video_detail" />
+
 </navigation>
