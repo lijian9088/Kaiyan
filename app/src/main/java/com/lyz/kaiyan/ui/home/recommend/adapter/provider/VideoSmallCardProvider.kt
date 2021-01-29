@@ -1,9 +1,11 @@
 package com.lyz.kaiyan.ui.home.recommend.adapter.provider
 
+import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation
+import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.bumptech.glide.Glide
@@ -14,6 +16,7 @@ import com.lyz.kaiyan.R
 import com.lyz.kaiyan.contract.VideoHeadBean
 import com.lyz.kaiyan.ui.home.recommend.adapter.RecommendItemType
 import com.lyz.kaiyan.ui.home.recommend.adapter.model.VideoSmallCardModel
+import com.lyz.kaiyan.ui.videodetail.VideoDetailActivity
 
 /**
  * @author liyanze
@@ -41,28 +44,7 @@ class VideoSmallCardProvider : BaseItemProvider<VideoSmallCardModel>() {
         helper.getView<TextView>(R.id.tvTitle).text = item.title
         helper.getView<TextView>(R.id.tvDes).text = item.description
 
-        ivCover.setOnClickListener(View.OnClickListener {
-//            goVideoDetail(item)
-            Navigation.findNavController(it).navigate(R.id.navigation_user)
-        })
-    }
-
-    private fun goVideoDetail(item: VideoSmallCardModel) {
-        val videoHeadBean = VideoHeadBean(
-            item.title,
-            item.description,
-            item.videoDescription,
-            item.collectionCount,
-            item.shareCount,
-            item.authorUrl,
-            item.nickName,
-            item.userDescription,
-            item.playerUrl,
-            item.blurredUrl,
-            item.videoId
-        )
-
-
+        ClickUtils.applyPressedViewAlpha(helper.itemView)
     }
 
 }

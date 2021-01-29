@@ -1,4 +1,4 @@
-package com.lyz.kaiyan.ui.home.recommend.adapter.model
+package com.lyz.kaiyan.contract
 
 import java.io.Serializable
 

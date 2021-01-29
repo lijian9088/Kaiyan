@@ -1,10 +1,12 @@
 package com.lyz.kaiyan.ui.home.recommend.adapter.provider
 
 import android.app.Activity
+import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation
+import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
@@ -14,9 +16,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.provider.BaseItemProvider
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lyz.kaiyan.R
+import com.lyz.kaiyan.contract.VideoHeadBean
 import com.lyz.kaiyan.ui.home.recommend.RecommendFragment
 import com.lyz.kaiyan.ui.home.recommend.adapter.RecommendItemType
 import com.lyz.kaiyan.ui.home.recommend.adapter.model.FollowCardModel
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.VideoSmallCardModel
+import com.lyz.kaiyan.ui.videodetail.VideoDetailActivity
 
 /**
  * @author liyanze
@@ -52,11 +57,31 @@ open class FollowCardProvider : BaseItemProvider<FollowCardModel>() {
         helper.getView<TextView>(R.id.tvTitle).text = item.title
         helper.getView<TextView>(R.id.tvDes).text = item.description
 
-        ivCover.setOnClickListener(View.OnClickListener {
+//        ivCover.setOnClickListener(View.OnClickListener {
 //            goVideoDetail(item)
-            Navigation.findNavController(it).navigate(R.id.navigation_video_detail)
-        })
+//        })
 
+        ClickUtils.applyPressedViewAlpha(helper.itemView)
+    }
+
+    private fun goVideoDetail(item: FollowCardModel) {
+        val videoHeadBean = VideoHeadBean(
+            item.title,
+            item.description,
+            item.videoDescription,
+            item.collectionCount,
+            item.shareCount,
+            item.authorUrl,
+            item.nickName,
+            item.userDescription,
+            item.playerUrl,
+            item.blurredUrl,
+            item.videoId
+        )
+
+        val intent = Intent(context, VideoDetailActivity::class.java)
+        intent.putExtra("videoHead",videoHeadBean)
+        context.startActivity(intent)
     }
 
 }

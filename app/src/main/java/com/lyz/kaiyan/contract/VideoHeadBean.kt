@@ -1,5 +1,7 @@
 package com.lyz.kaiyan.contract
 
+import java.io.Serializable
+
 /**
  * @author mac
  * @create 2021/01/28
@@ -17,4 +19,4 @@ class VideoHeadBean(
     var playerUrl: String?,
     var blurredUrl: String?,
     var videoId: Int
-)
+) : Serializable

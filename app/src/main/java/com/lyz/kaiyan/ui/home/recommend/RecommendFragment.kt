@@ -1,5 +1,6 @@
 package com.lyz.kaiyan.ui.home.recommend
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,21 +12,19 @@ import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.hjq.http.EasyHttp
-import com.hjq.http.config.IRequestApi
 import com.hjq.http.listener.OnHttpListener
 import com.lyz.kaiyan.R
 import com.lyz.kaiyan.base.MyLazyFragment
 import com.lyz.kaiyan.bean.*
+import com.lyz.kaiyan.contract.BaseModel
+import com.lyz.kaiyan.contract.VideoHeadBean
 import com.lyz.kaiyan.http.request.CustomApi
 import com.lyz.kaiyan.http.request.RecommendApi
 import com.lyz.kaiyan.ui.home.recommend.adapter.RecommendAdapter
 import com.lyz.kaiyan.ui.home.recommend.adapter.model.*
-import com.scwang.smart.refresh.footer.ClassicsFooter
-import com.scwang.smart.refresh.header.ClassicsHeader
+import com.lyz.kaiyan.ui.videodetail.VideoDetailActivity
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.scwang.smart.refresh.layout.listener.OnMultiListener
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import com.scwang.smart.refresh.layout.simple.SimpleMultiListener
 
 
@@ -84,6 +83,54 @@ class RecommendFragment : MyLazyFragment() {
             }
         })
 
+        (recyclerView.adapter as RecommendAdapter).setOnItemClickListener { adapter, view, position ->
+            val item = adapter.getItem(position)
+            if(item is FollowCardModel || item is VideoSmallCardModel) {
+                goDetail(item as BaseModel)
+            }
+        }
+    }
+
+    private fun goDetail(item: BaseModel) {
+        val videoHeadBean: VideoHeadBean
+        when(item) {
+            is FollowCardModel -> {
+                videoHeadBean = VideoHeadBean(
+                    item.title,
+                    item.description,
+                    item.videoDescription,
+                    item.collectionCount,
+                    item.shareCount,
+                    item.authorUrl,
+                    item.nickName,
+                    item.userDescription,
+                    item.playerUrl,
+                    item.blurredUrl,
+                    item.videoId
+                )
+            }
+            is VideoSmallCardModel -> {
+                videoHeadBean = VideoHeadBean(
+                    item.title,
+                    item.description,
+                    item.videoDescription,
+                    item.collectionCount,
+                    item.shareCount,
+                    item.authorUrl,
+                    item.nickName,
+                    item.userDescription,
+                    item.playerUrl,
+                    item.blurredUrl,
+                    item.videoId
+                )
+            }
+            else -> {
+                return
+            }
+        }
+        val intent = Intent(context, VideoDetailActivity::class.java)
+        intent.putExtra("videoHead", videoHeadBean)
+        startActivity(intent)
     }
 
     private fun loadMore() {

@@ -2,7 +2,7 @@ package com.lyz.kaiyan.ui.home.recommend.adapter
 
 import com.chad.library.adapter.base.BaseProviderMultiAdapter
 import com.chad.library.adapter.base.provider.BaseItemProvider
-import com.lyz.kaiyan.bean.VideoSmallCardBean
+import com.lyz.kaiyan.contract.BaseModel
 import com.lyz.kaiyan.ui.home.recommend.adapter.model.*
 import com.lyz.kaiyan.ui.home.recommend.adapter.provider.FollowCardProvider
 import com.lyz.kaiyan.ui.home.recommend.adapter.provider.SingleTitleProvider

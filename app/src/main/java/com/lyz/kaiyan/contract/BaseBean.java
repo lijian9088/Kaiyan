@@ -1,4 +1,4 @@
-package com.lyz.kaiyan.bean;
+package com.lyz.kaiyan.contract;
 
 import java.io.Serializable;
 
