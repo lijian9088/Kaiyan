@@ -129,7 +129,7 @@ class RecommendFragment : MyLazyFragment() {
             }
         }
         val intent = Intent(context, VideoDetailActivity::class.java)
-        intent.putExtra("videoHead", videoHeadBean)
+        intent.putExtra(VideoDetailActivity.EXTRA_VIDEO_HEAD, videoHeadBean)
         startActivity(intent)
     }
 
@@ -236,6 +236,11 @@ class RecommendFragment : MyLazyFragment() {
         followCardViewModel.authorUrl = data.author.icon
         followCardViewModel.title = data.title
         followCardViewModel.description = "${data.author.name} / #${data.category}"
+        followCardViewModel.videoDescription = data.description
+        followCardViewModel.userDescription = data.author.description
+        followCardViewModel.playerUrl = data.playUrl
+        followCardViewModel.blurredUrl = data.cover.blurred
+        followCardViewModel.videoId = data.id
         list.add(followCardViewModel)
     }
 
@@ -246,6 +251,13 @@ class RecommendFragment : MyLazyFragment() {
         model.videoTime = data.duration
         model.title = data.title
         model.description = "${data.author.name} / #${data.category}"
+        model.videoDescription = data.description
+        model.userDescription = data.author.description
+        model.playerUrl = data.playUrl
+        model.blurredUrl = data.cover.blurred
+        model.videoId = data.id
+        model.collectionCount = data.consumption.collectionCount
+        model.shareCount = data.consumption.shareCount
         list.add(model)
     }
 
