@@ -16,7 +16,6 @@
         android:id="@+id/coverVideoView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="#abf"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout

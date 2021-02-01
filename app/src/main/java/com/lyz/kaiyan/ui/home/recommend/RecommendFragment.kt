@@ -83,54 +83,6 @@ class RecommendFragment : MyLazyFragment() {
             }
         })
 
-        (recyclerView.adapter as RecommendAdapter).setOnItemClickListener { adapter, view, position ->
-            val item = adapter.getItem(position)
-            if(item is FollowCardModel || item is VideoSmallCardModel) {
-                goDetail(item as BaseModel)
-            }
-        }
-    }
-
-    private fun goDetail(item: BaseModel) {
-        val videoHeadBean: VideoHeadBean
-        when(item) {
-            is FollowCardModel -> {
-                videoHeadBean = VideoHeadBean(
-                    item.title,
-                    item.description,
-                    item.videoDescription,
-                    item.collectionCount,
-                    item.shareCount,
-                    item.authorUrl,
-                    item.nickName,
-                    item.userDescription,
-                    item.playerUrl,
-                    item.blurredUrl,
-                    item.videoId
-                )
-            }
-            is VideoSmallCardModel -> {
-                videoHeadBean = VideoHeadBean(
-                    item.title,
-                    item.description,
-                    item.videoDescription,
-                    item.collectionCount,
-                    item.shareCount,
-                    item.authorUrl,
-                    item.nickName,
-                    item.userDescription,
-                    item.playerUrl,
-                    item.blurredUrl,
-                    item.videoId
-                )
-            }
-            else -> {
-                return
-            }
-        }
-        val intent = Intent(context, VideoDetailActivity::class.java)
-        intent.putExtra(VideoDetailActivity.EXTRA_VIDEO_HEAD, videoHeadBean)
-        startActivity(intent)
     }
 
     private fun loadMore() {
@@ -238,6 +190,7 @@ class RecommendFragment : MyLazyFragment() {
         followCardViewModel.description = "${data.author.name} / #${data.category}"
         followCardViewModel.videoDescription = data.description
         followCardViewModel.userDescription = data.author.description
+        followCardViewModel.nickName = data.author.name
         followCardViewModel.playerUrl = data.playUrl
         followCardViewModel.blurredUrl = data.cover.blurred
         followCardViewModel.videoId = data.id
@@ -249,10 +202,12 @@ class RecommendFragment : MyLazyFragment() {
         val model = VideoSmallCardModel()
         model.coverUrl = data.cover.detail
         model.videoTime = data.duration
+        model.authorUrl = data.author.icon
         model.title = data.title
         model.description = "${data.author.name} / #${data.category}"
         model.videoDescription = data.description
         model.userDescription = data.author.description
+        model.nickName = data.author.name
         model.playerUrl = data.playUrl
         model.blurredUrl = data.cover.blurred
         model.videoId = data.id

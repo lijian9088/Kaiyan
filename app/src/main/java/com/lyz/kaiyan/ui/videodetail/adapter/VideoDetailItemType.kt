@@ -8,5 +8,7 @@ package com.lyz.kaiyan.ui.videodetail.adapter
 class VideoDetailItemType {
     companion object{
         const val TOP = 1
+        const val LEFT_ALIGN_TEXT_HEADER = 12
+        const val REPLY = 13
     }
 }

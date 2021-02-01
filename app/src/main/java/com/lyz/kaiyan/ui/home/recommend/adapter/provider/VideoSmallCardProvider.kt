@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.navigation.Navigation
 import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.TimeUtils
@@ -15,6 +14,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lyz.kaiyan.R
 import com.lyz.kaiyan.contract.VideoHeadBean
 import com.lyz.kaiyan.ui.home.recommend.adapter.RecommendItemType
+import com.lyz.kaiyan.ui.home.recommend.adapter.model.FollowCardModel
 import com.lyz.kaiyan.ui.home.recommend.adapter.model.VideoSmallCardModel
 import com.lyz.kaiyan.ui.videodetail.VideoDetailActivity
 
@@ -44,7 +44,31 @@ class VideoSmallCardProvider : BaseItemProvider<VideoSmallCardModel>() {
         helper.getView<TextView>(R.id.tvTitle).text = item.title
         helper.getView<TextView>(R.id.tvDes).text = item.description
 
+        helper.itemView.setOnClickListener(View.OnClickListener {
+            goVideoDetail(item)
+        })
+
         ClickUtils.applyPressedViewAlpha(helper.itemView)
+    }
+
+    private fun goVideoDetail(item: VideoSmallCardModel) {
+        val videoHeadBean = VideoHeadBean(
+            item.title,
+            item.description,
+            item.videoDescription,
+            item.collectionCount,
+            item.shareCount,
+            item.authorUrl,
+            item.nickName,
+            item.userDescription,
+            item.playerUrl,
+            item.blurredUrl,
+            item.videoId
+        )
+
+        val intent = Intent(context, VideoDetailActivity::class.java)
+        intent.putExtra(VideoDetailActivity.EXTRA_VIDEO_HEAD, videoHeadBean)
+        context.startActivity(intent)
     }
 
 }

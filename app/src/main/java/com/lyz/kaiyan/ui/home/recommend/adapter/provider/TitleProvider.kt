@@ -20,9 +20,9 @@ open class TitleProvider : BaseItemProvider<TitleModel>() {
     override val layoutId: Int
         get() = R.layout.item_title
 
-    override fun convert(helper: BaseViewHolder, entity: TitleModel) {
-        helper.getView<TextView>(R.id.tvTitle).text = entity.title
-        helper.getView<TextView>(R.id.tvActionTitle).text = entity.actionTitle
+    override fun convert(helper: BaseViewHolder, item: TitleModel) {
+        helper.getView<TextView>(R.id.tvTitle).text = item.title
+        helper.getView<TextView>(R.id.tvActionTitle).text = item.actionTitle
     }
 
 }

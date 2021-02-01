@@ -57,9 +57,9 @@ open class FollowCardProvider : BaseItemProvider<FollowCardModel>() {
         helper.getView<TextView>(R.id.tvTitle).text = item.title
         helper.getView<TextView>(R.id.tvDes).text = item.description
 
-//        ivCover.setOnClickListener(View.OnClickListener {
-//            goVideoDetail(item)
-//        })
+        helper.itemView.setOnClickListener(View.OnClickListener {
+            goVideoDetail(item)
+        })
 
         ClickUtils.applyPressedViewAlpha(helper.itemView)
     }
@@ -80,7 +80,7 @@ open class FollowCardProvider : BaseItemProvider<FollowCardModel>() {
         )
 
         val intent = Intent(context, VideoDetailActivity::class.java)
-        intent.putExtra("videoHead",videoHeadBean)
+        intent.putExtra(VideoDetailActivity.EXTRA_VIDEO_HEAD, videoHeadBean)
         context.startActivity(intent)
     }
 
