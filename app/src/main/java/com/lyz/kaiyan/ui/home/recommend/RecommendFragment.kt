@@ -72,7 +72,7 @@ class RecommendFragment : MyLazyFragment() {
     }
 
     private fun initEvent() {
-        refreshLayout.setOnMultiListener(object : SimpleMultiListener(){
+        refreshLayout.setOnMultiListener(object : SimpleMultiListener() {
             override fun onRefresh(refreshLayout: RefreshLayout) {
                 initHttp()
             }
@@ -87,36 +87,36 @@ class RecommendFragment : MyLazyFragment() {
 
     private fun loadMore() {
         EasyHttp.get(this)
-            .api(CustomApi(nextPageUrl))
-            .request(object : OnHttpListener<MultiPageBean> {
-                override fun onSucceed(result: MultiPageBean?) {
-                    parseResult(result)
-                    refreshLayout.finishLoadMore()
-                }
+                .api(CustomApi(nextPageUrl))
+                .request(object : OnHttpListener<MultiPageBean> {
+                    override fun onSucceed(result: MultiPageBean?) {
+                        parseResult(result)
+                        refreshLayout.finishLoadMore()
+                    }
 
-                override fun onFail(e: Exception?) {
-                    showFail(e)
-                    refreshLayout.finishLoadMore(false)
-                }
+                    override fun onFail(e: Exception?) {
+                        showFail(e)
+                        refreshLayout.finishLoadMore(false)
+                    }
 
-            })
+                })
     }
 
     private fun initHttp() {
         EasyHttp.get(this)
-            .api(RecommendApi())
-            .request(object : OnHttpListener<MultiPageBean> {
-                override fun onSucceed(result: MultiPageBean?) {
-                    parseResult(result)
-                    refreshLayout.finishRefresh()
-                }
+                .api(RecommendApi())
+                .request(object : OnHttpListener<MultiPageBean> {
+                    override fun onSucceed(result: MultiPageBean?) {
+                        parseResult(result)
+                        refreshLayout.finishRefresh()
+                    }
 
-                override fun onFail(e: Exception?) {
-                    showFail(e)
-                    refreshLayout.finishRefresh(false)
-                }
+                    override fun onFail(e: Exception?) {
+                        showFail(e)
+                        refreshLayout.finishRefresh(false)
+                    }
 
-            })
+                })
     }
 
     private var nextPageUrl: String? = null
@@ -219,9 +219,9 @@ class RecommendFragment : MyLazyFragment() {
     private fun showData(result: MutableList<BaseModel>) {
         val recommendAdapter = recyclerView.adapter as RecommendAdapter
 //        recommendAdapter.setList(result)
-        if(recommendAdapter.data.size <= 0){
+        if(recommendAdapter.data.size <= 0) {
             recommendAdapter.setList(result)
-        }else{
+        } else {
             recommendAdapter.addData(result)
         }
     }
